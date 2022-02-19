@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react'
+
+import { getCountries } from './apis'
+
+import CountrySelector from './components/CountrySelector/index'
+import Highlight from './components/Highlight/index'
+import Summary from './components/Summary/index'
+
 
 function App() {
+  // truyen api getCountries
+  useEffect(
+    () => {
+      getCountries().then((res) => {
+        console.log({ res })
+      })
+    }, []
+  )
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <h3>This is my app covid flow</h3>
+      <CountrySelector />
+      <Highlight />
+      <Summary />
+    </>
+  )
 }
 
-export default App;
+export default App
