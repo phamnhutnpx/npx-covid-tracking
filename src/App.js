@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { getCountries } from './apis'
 
@@ -8,19 +8,19 @@ import Summary from './components/Summary/index'
 
 
 function App() {
+  const [countries, setCountries] = useState()
+
   // truyen api getCountries
-  useEffect(
-    () => {
-      getCountries().then((res) => {
-        console.log({ res })
-      })
-    }, []
-  )
+  useEffect(() => {
+    getCountries().then((res) => {
+      setCountries(res.data)
+    })
+  }, [])
 
   return (
     <>
       <h3>This is my app covid flow</h3>
-      <CountrySelector />
+      <CountrySelector countries={countries} />
       <Highlight />
       <Summary />
     </>

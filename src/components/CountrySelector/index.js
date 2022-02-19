@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormControl, InputLabel, NativeSelect } from '@material-ui/core'
 
-const CountrySelector = ({ value, handleOnChange }) => {
+const CountrySelector = ({ value, handleOnChange, countries }) => {
     return (
         <FormControl>
             <InputLabel htmlFor="country-selector" shrink>
@@ -15,7 +15,11 @@ const CountrySelector = ({ value, handleOnChange }) => {
                     name: 'country'
                 }}
             >
-
+                {countries.map(country => (
+                    <option value={country.ISO2.toLowerCase()}>
+                        {country.Country}
+                    </option>
+                ))}
             </NativeSelect>
         </FormControl>
     )
