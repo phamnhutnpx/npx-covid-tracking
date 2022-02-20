@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormControl, InputLabel, NativeSelect } from '@material-ui/core'
+import { FormControl, FormHelperText, InputLabel, NativeSelect } from '@material-ui/core'
 
 const CountrySelector = ({ value, handleOnChange, countries }) => {
     return (
@@ -21,6 +21,7 @@ const CountrySelector = ({ value, handleOnChange, countries }) => {
                     </option>
                 ))}
             </NativeSelect>
+            <FormHelperText>Chọn quốc gia bạn muốn xem</FormHelperText>
         </FormControl>
     )
 }

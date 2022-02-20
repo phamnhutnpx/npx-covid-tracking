@@ -17,10 +17,14 @@ function App() {
     })
   }, [])
 
+  const handleOnChange = (e) => {
+    console.log({ e });
+  }
+
   return (
     <>
       <h3>This is my app covid flow</h3>
-      <CountrySelector countries={countries} />
+      <CountrySelector countries={countries} handleOnChange={handleOnChange} />
       <Highlight />
       <Summary />
     </>
