@@ -5,7 +5,7 @@ const CountrySelector = ({ value, handleOnChange, countries }) => {
     return (
         <FormControl>
             <InputLabel htmlFor="country-selector" shrink>
-                Quoc gia eeeeee
+                Danh sách quốc gia trên thế giới
             </InputLabel>
             <NativeSelect
                 value={value}
@@ -15,8 +15,8 @@ const CountrySelector = ({ value, handleOnChange, countries }) => {
                     name: 'country'
                 }}
             >
-                {countries.map(country => (
-                    <option value={country.ISO2.toLowerCase()}>
+                {countries && countries.map((country, index) => (
+                    <option key={index} value={country.ISO2.toLowerCase()}>
                         {country.Country}
                     </option>
                 ))}

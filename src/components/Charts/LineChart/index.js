@@ -1,6 +1,6 @@
-import HighChartsReact from 'highcharts-react-official'
-import HighCharts from 'highcharts'
 import React, { useEffect, useState } from 'react'
+import HighCharts from 'highcharts'
+import HighChartsReact from 'highcharts-react-official'
 
 const generateOptions = (data) => {
 
@@ -40,7 +40,7 @@ const generateOptions = (data) => {
         series: [
             {
                 name: 'Tổng ca nhiễm',
-                data: data.map((item) => item.Confirmed())
+                data: data.map((item) => item.Confirmed)
             }
         ]
     }
