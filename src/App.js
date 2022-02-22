@@ -42,7 +42,7 @@ function App() {
 
   return (
     <>
-      <h3>This is my app covid flow</h3>
+      <h1>Theo dõi tình hình covid cả thế giới</h1>
       <CountrySelector countries={countries} handleOnChange={handleOnChange} value={selectedCountryId} />
       <Highlight report={report} />
       <Summary report={report} />

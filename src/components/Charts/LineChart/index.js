@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import HighCharts from 'highcharts'
 import HighChartsReact from 'highcharts-react-official'
+import moment from 'moment'
+import { ButtonGroup, Button } from '@material-ui/core'
+
 
 const generateOptions = (data) => {
 
-    const categories = []
+    const categories = data.map((item) =>
+        moment(item.Date).format('DD-MM-YYYY'))
     return {
         chart: {
             height: 500
@@ -48,16 +52,40 @@ const generateOptions = (data) => {
 
 function LineChart({ data }) {
 
-    const [options, setOptions] = useState({});
-    useEffect(() => {
-        setOptions(generateOptions(data))
-    }, [data])
+    const [options, setOptions] = useState({})
+    const [reportType, setReportType] = useState('All')
+    useEffect((customData) => {
+        // Xu li data de tao lua chon
+        switch (reportType) {
+            case 'All':
+                customData = data
+                break
+            case '30':
+                customData = data.slice(data.length - 30)
+                break
+            case '7':
+                customData = data.slice(data.length - 7)
+                break
+            default: customData = data
+        }
+
+
+        setOptions(generateOptions(customData))
+    }, [data, reportType])
 
     return (
-        <HighChartsReact
-            highcharts={HighCharts}
-            options={options}
-        />
+        <>
+
+            <ButtonGroup size="small" style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button color={reportType === 'All' ? 'secondary' : ''} onClick={() => setReportType('All')}>Tất cả</Button>
+                <Button color={reportType === '30' ? 'secondary' : ''} onClick={() => setReportType('30')}>30 ngày</Button>
+                <Button color={reportType === '7' ? 'secondary' : ''} onClick={() => setReportType('7')}>7 ngày</Button>
+            </ButtonGroup>
+            <HighChartsReact
+                highcharts={HighCharts}
+                options={options}
+            />
+        </>
     )
 }
 

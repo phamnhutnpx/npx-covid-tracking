@@ -11,10 +11,12 @@
     "chart.js": "^3.7.1",
     "highcharts": "^9.3.3",
     "highcharts-react-official": "^3.1.0",
+    "moment": "^2.29.1",
     "ng2-charts": "^3.0.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
+    "scss": "^0.2.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
