@@ -1,6 +1,6 @@
 import { Grid } from '@material-ui/core'
 import React from 'react'
-import LineChart from '../Charts'
+import LineChart from '../Charts/LineChart'
 
 
 const Summary = () => {
