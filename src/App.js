@@ -14,8 +14,14 @@ function App() {
   // truyen api getCountries
   useEffect(() => {
     getCountries().then((res) => {
-      setCountries(res.data)
-      // set mac dinh khi load len laf data cua vn
+
+      // Requiring the lodash library 
+      const _ = require("lodash");
+      // sap xep theo ten quoc gia o muc selected
+      const countries = _.sortBy(res.data, 'Country')
+      setCountries(countries)
+
+      // set mac dinh khi load len la data cua vn
       setSelectedCountryId('vn')
     })
 
