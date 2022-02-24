@@ -1,65 +1,87 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useMemo } from 'react';
+import { sortBy } from 'lodash';
+import CountrySelector from './components/CountrySelector';
+import { getCountries, getReportByCountry } from './components/apis';
+import Summary from './components/Summary';
+import Highlight from './components/Highlight';
+import { Container, Typography } from '@material-ui/core';
+import '@fontsource/roboto';
+import moment from 'moment';
+import 'moment/locale/vi';
 
-import { getCountries, getReportByCountry } from './apis'
-import './apis'
+moment.locale('vi');
 
-import CountrySelector from './components/CountrySelector/index'
-import Highlight from './components/Highlight/index'
-import Summary from './components/Summary/index'
+const App = () => {
+  const [countries, setCountries] = React.useState([]);
+  const [selectedCountryId, setSelectedCountryId] = React.useState('');
+  const [report, setReport] = React.useState([]);
 
-import { Typography } from '@material-ui/core'
-import '@fontsource/roboto'
-
-
-function App() {
-  const [countries, setCountries] = useState()
-  const [selectedCountryId, setSelectedCountryId] = useState('')
-  const [report, setReport] = useState([])
-  // truyen api getCountries
   useEffect(() => {
     getCountries().then((res) => {
+      const { data } = res;
+      const countries = sortBy(data, 'Country');
+      setCountries(countries);
+      setSelectedCountryId('vn');
+    });
+  }, []);
 
-      // Requiring the lodash library 
-      const _ = require("lodash");
-      // sap xep theo ten quoc gia o muc selected
-      const countries = _.sortBy(res.data, 'Country')
-      setCountries(countries)
+  const handleOnChange = React.useCallback((e) => {
+    setSelectedCountryId(e.target.value);
+  }, []);
 
-      // set mac dinh khi load len la data cua vn
-      setSelectedCountryId('vn')
-    })
-
-  }, [])
-  // xu li khi nguoi dung thay doi quoc gia
-  const handleOnChange = (e) => {
-    setSelectedCountryId(e.target.value)
-
-  }
   useEffect(() => {
     if (selectedCountryId) {
-      const { Slug } = countries.find(country => country.ISO2.toLowerCase() === selectedCountryId)
-
-      // call API
-      getReportByCountry(Slug)
-        .then((res) => {
-          // xoa item cuoi cua mang
-          res.data.pop()
-          setReport(res.data)
-        }
-        )
+      const selectedCountry = countries.find(
+        (country) => country.ISO2 === selectedCountryId.toUpperCase()
+      );
+      getReportByCountry(selectedCountry.Slug).then((res) => {
+        console.log('getReportByCountry', { res });
+        // remove last item = current date
+        res.data.pop();
+        setReport(res.data);
+      });
     }
-  }, [countries, selectedCountryId])
+  }, [selectedCountryId, countries]);
+
+  const summary = useMemo(() => {
+    if (report && report.length) {
+      const latestData = report[report.length - 1];
+      return [
+        {
+          title: 'Số ca nhiễm',
+          count: latestData.Confirmed,
+          type: 'confirmed',
+        },
+        {
+          title: 'Khỏi',
+          count: latestData.Recovered,
+          type: 'recovered',
+        },
+        {
+          title: 'Tử vong',
+          count: latestData.Deaths,
+          type: 'death',
+        },
+      ];
+    }
+    return [];
+  }, [report]);
 
   return (
-    <div className="app-container">
+    <Container style={{ marginTop: 20 }}>
       <Typography variant='h2' component='h2'>
-        Số liệu COVID-19 cả thế giới
+        Số liệu COVID-19
       </Typography>
-      <CountrySelector countries={countries} handleOnChange={handleOnChange} value={selectedCountryId} />
-      <Highlight report={report} />
-      <Summary report={report} selectedCountryId={selectedCountryId} />
-    </div>
-  )
-}
+      <Typography>{moment().format('LLL')}</Typography>
+      <CountrySelector
+        handleOnChange={handleOnChange}
+        countries={countries}
+        value={selectedCountryId}
+      />
+      <Highlight summary={summary} />
+      <Summary countryId={selectedCountryId} report={report} />
+    </Container>
+  );
+};
 
-export default App
+export default App;

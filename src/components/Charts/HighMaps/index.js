@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react'
-import HighCharts from 'highcharts'
-import HighChartsReact from 'highcharts-react-official'
-import { ButtonGroup, Button } from '@material-ui/core'
-import highchartsMap from 'highcharts/modules/map'
+import React, { useEffect, useRef, useState } from 'react';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import highchartsMap from 'highcharts/modules/map';
+import { cloneDeep } from 'lodash';
 
-// load hightchart module
-highchartsMap(HighCharts)
+// Load Highcharts modules
+highchartsMap(Highcharts);
+
 const initOptions = {
     chart: {
         height: '500',
@@ -33,42 +34,61 @@ const initOptions = {
     },
     series: [
         {
-            mapData: {},
             name: 'Dân số',
             joinBy: ['hc-key', 'key'],
         },
     ],
 };
+
 const HighMaps = ({ mapData }) => {
-    const [options, setOptions] = useState({})
-    const chartRef = useRef(null)
+    const [options, setOptions] = useState({});
+    const [mapLoaded, setMapLoaded] = useState(false);
+    const chartRef = useRef(null);
 
     useEffect(() => {
         if (mapData && Object.keys(mapData).length) {
+            console.log({ mapData });
             const fakeData = mapData.features.map((feature, index) => ({
                 key: feature.properties['hc-key'],
-                value: index
-            }))
+                value: index,
+            }));
 
+            setOptions(() => ({
+                ...initOptions,
+                title: {
+                    text: mapData.title,
+                },
+                series: [
+                    { ...initOptions.series[0], mapData: mapData, data: fakeData },
+                ],
+            }));
+
+            if (!mapLoaded) setMapLoaded(true);
         }
-        setOptions({
-            ...initOptions,
-            series: [{
-                ...initOptions.series[0],
-                mapData: mapData,
-                data: fakeData
-            }]
-        })
-    }, [mapData])
+    }, [mapData, mapLoaded]);
+
+    useEffect(() => {
+        if (chartRef && chartRef.current) {
+            chartRef.current.chart.series[0].update({
+                mapData,
+            });
+        }
+    }, [options, mapData]);
+
+    if (!mapLoaded) return null;
 
     return (
-        <HighChartsReact
+        <HighchartsReact
             highcharts={Highcharts}
-            options={{}}
-            constructorType={constructorType}
+            options={cloneDeep(options)}
+            constructorType={'mapChart'}
             ref={chartRef}
         />
-    )
-}
+    );
+};
 
-export default HighMaps
+HighMaps.defaultProps = {
+    mapData: {},
+};
+
+export default React.memo(HighMaps);

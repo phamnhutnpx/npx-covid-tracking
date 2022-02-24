@@ -1,29 +1,44 @@
-import React from 'react'
-import { FormControl, FormHelperText, InputLabel, NativeSelect } from '@material-ui/core'
+import React from 'react';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import { makeStyles } from '@material-ui/core/styles';
 
-const CountrySelector = ({ value, handleOnChange, countries }) => {
+const useStyles = makeStyles((theme) => ({
+    formControl: {
+        margin: `${theme.spacing(3)}px 0`,
+        minWidth: 120,
+    },
+}));
+
+export default function CountrySelector({ countries, handleOnChange, value }) {
+    const classes = useStyles();
+
     return (
-        <FormControl>
-            <InputLabel htmlFor="country-selector" shrink>
-                Danh sách quốc gia trên thế giới
+        <FormControl className={classes.formControl}>
+            <InputLabel shrink htmlFor='country-selector'>
+                Quốc Gia
             </InputLabel>
             <NativeSelect
                 value={value}
                 onChange={handleOnChange}
                 inputProps={{
+                    name: 'country',
                     id: 'country-selector',
-                    name: 'country'
                 }}
             >
-                {countries && countries.map((country, index) => (
-                    <option key={index} value={country.ISO2.toLowerCase()}>
-                        {country.Country}
+                {countries.map(({ Country, ISO2 }) => (
+                    <option key={ISO2} value={ISO2.toLowerCase()}>
+                        {Country}
                     </option>
                 ))}
             </NativeSelect>
-            <FormHelperText>Chọn quốc gia bạn muốn xem</FormHelperText>
+            <FormHelperText>Lựa chọn quốc gia</FormHelperText>
         </FormControl>
-    )
+    );
 }
 
-export default CountrySelector
+CountrySelector.defaultProps = {
+    countries: [],
+};

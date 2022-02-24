@@ -1,92 +1,113 @@
-import React, { useEffect, useState } from 'react'
-import HighCharts from 'highcharts'
-import HighChartsReact from 'highcharts-react-official'
-import moment from 'moment'
-import { ButtonGroup, Button } from '@material-ui/core'
-
+import React, { useEffect, useState } from 'react';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import moment from 'moment';
+import { Button, ButtonGroup } from '@material-ui/core';
 
 const generateOptions = (data) => {
+    const categories = data.map((item) => moment(item.Date).format('DD/MM/YYYY'));
 
-    const categories = data.map((item) =>
-        moment(item.Date).format('DD-MM-YYYY'))
     return {
         chart: {
-            height: 500
+            height: 500,
         },
         title: {
-            text: 'Tổng ca nhiễm'
+            text: 'Tổng ca nhiễm',
         },
         xAxis: {
             categories: categories,
-            crosshair: true
+            crosshair: true,
         },
-        colors: ['#f35858'],
+        colors: ['#F3585B'],
         yAxis: {
             min: 0,
             title: {
-                text: null
-            }
+                text: null,
+            },
+            labels: {
+                align: 'right',
+            },
         },
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
             pointFormat:
-                '<tr><td style="{series.color};padding: 0">{series.name}:</td>' + '<td style="padding: 0"><b>{point.y}ca<b/></td></tr>',
+                '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y} ca</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
-            useHTML: true
+            useHTML: true,
         },
         plotOptions: {
             column: {
                 pointPadding: 0.2,
-                borderWidth: 0
-            }
+                borderWidth: 0,
+            },
         },
         series: [
             {
-                name: 'Tổng ca nhiễm',
-                data: data.map((item) => item.Confirmed)
-            }
-        ]
-    }
-}
+                name: 'Tổng Ca nhiễm',
+                data: data.map((item) => item.Confirmed),
+            },
+        ],
+    };
+};
 
-function LineChart({ data }) {
+export default function LineChart({ data }) {
+    const [options, setOptions] = useState({});
+    const [reportType, setReportType] = useState('all');
+    console.log({ data });
 
-    const [options, setOptions] = useState({})
-    const [reportType, setReportType] = useState('All')
-    useEffect((customData) => {
-        // Xu li data de tao lua chon
+    useEffect(() => {
+        let customData = [];
         switch (reportType) {
-            case 'All':
-                customData = data
-                break
+            case 'all':
+                customData = data;
+                break;
             case '30':
-                customData = data.slice(data.length - 30)
-                break
+                customData = data.slice(Math.max(data.length - 30, 1));
+                break;
             case '7':
-                customData = data.slice(data.length - 7)
-                break
-            default: customData = data
+                customData = data.slice(Math.max(data.length - 7, 1));
+                break;
+
+            default:
+                customData = data;
+                break;
         }
 
-
-        setOptions(generateOptions(customData))
-    }, [data, reportType])
+        setOptions(generateOptions(customData));
+    }, [data, reportType]);
 
     return (
         <>
-
-            <ButtonGroup size="small" style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button color={reportType === 'All' ? 'secondary' : ''} onClick={() => setReportType('All')}>Tất cả</Button>
-                <Button color={reportType === '30' ? 'secondary' : ''} onClick={() => setReportType('30')}>30 ngày</Button>
-                <Button color={reportType === '7' ? 'secondary' : ''} onClick={() => setReportType('7')}>7 ngày</Button>
+            <ButtonGroup
+                size='small'
+                aria-label='small outlined button group'
+                style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
+            >
+                <Button
+                    color={reportType === 'all' ? 'secondary' : ''}
+                    onClick={() => setReportType('all')}
+                >
+                    Tất cả
+                </Button>
+                <Button
+                    color={reportType === '30' ? 'secondary' : ''}
+                    onClick={() => setReportType('30')}
+                >
+                    30 ngày
+                </Button>
+                <Button
+                    color={reportType === '7' ? 'secondary' : ''}
+                    onClick={() => setReportType('7')}
+                >
+                    7 ngày
+                </Button>
             </ButtonGroup>
-            <HighChartsReact
-                highcharts={HighCharts}
-                options={options}
-            />
+            <HighchartsReact highcharts={Highcharts} options={options} />
         </>
-    )
+    );
 }
-
-export default LineChart

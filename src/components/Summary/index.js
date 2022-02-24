@@ -1,31 +1,33 @@
-import { Grid } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
-import LineChart from '../Charts/LineChart'
-import HightMaps from '../Charts/HighMaps'
+import React, { useEffect, useState } from 'react';
+import Grid from '@material-ui/core/Grid';
 
+import { getMapDataByCountryId } from '../apis';
+import LineChart from '../Charts/LineChart';
+import HighMaps from '../Charts/HighMaps';
 
-const Summary = ({ report, selectedCountryId }) => {
-    const [mapData, setMapData] = useState({})
+export default function Summary({ countryId, report }) {
+    const [mapData, setMapData] = useState({});
 
-    // goi API country o day de load ra ban do quoc gia
     useEffect(() => {
-        if (selectedCountryId) {
-            import(`@highcharts/map-collection/countries/${selectedCountryId}/${selectedCountryId}-all.geo.json`).then(res => setMapData(res))
+        if (countryId) {
+            getMapDataByCountryId(countryId)
+                .then((res) => {
+                    setMapData(res);
+                })
+                .catch((err) => console.log({ err }));
         }
-
-    }, [selectedCountryId])
-
+    }, [countryId]);
 
     return (
-        <Grid container spacing={3}>
-            <Grid item sm={8} xs={12}>
-                <LineChart data={report} />
+        <div style={{ height: '500px', marginTop: 10 }}>
+            <Grid container spacing={3}>
+                <Grid item sm={8} xs={12}>
+                    <LineChart data={report} />
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                    <HighMaps mapData={mapData} />
+                </Grid>
             </Grid>
-            <Grid item sm={4} xs={12}>
-                <HightMaps mapData={mapData} />
-            </Grid>
-        </Grid>
-    )
+        </div>
+    );
 }
-
-export default Summary
