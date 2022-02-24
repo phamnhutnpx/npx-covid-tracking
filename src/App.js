@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
 
 import { getCountries, getReportByCountry } from './apis'
+import './apis'
 
 import CountrySelector from './components/CountrySelector/index'
 import Highlight from './components/Highlight/index'
 import Summary from './components/Summary/index'
+
+import { Typography } from '@material-ui/core'
+import '@fontsource/roboto'
 
 
 function App() {
@@ -47,12 +51,14 @@ function App() {
   }, [countries, selectedCountryId])
 
   return (
-    <>
-      <h1>Theo dõi tình hình covid cả thế giới</h1>
+    <div className="app-container">
+      <Typography variant='h2' component='h2'>
+        Số liệu COVID-19 cả thế giới
+      </Typography>
       <CountrySelector countries={countries} handleOnChange={handleOnChange} value={selectedCountryId} />
       <Highlight report={report} />
-      <Summary report={report} />
-    </>
+      <Summary report={report} selectedCountryId={selectedCountryId} />
+    </div>
   )
 }
 
