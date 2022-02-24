@@ -6,16 +6,29 @@ import CountrySelector from './components/CountrySelector/index'
 import Highlight from './components/Highlight/index'
 import Summary from './components/Summary/index'
 
+import { Typography, Container } from '@material-ui/core'
+import '@fontsource/roboto'
+
+import moment from 'moment'
+import 'moment/locale/vi'
+moment.locale('vi')
 
 function App() {
   const [countries, setCountries] = useState()
   const [selectedCountryId, setSelectedCountryId] = useState('')
   const [report, setReport] = useState([])
+
   // truyen api getCountries
   useEffect(() => {
     getCountries().then((res) => {
-      setCountries(res.data)
-      // set mac dinh khi load len laf data cua vn
+
+      // Requiring the lodash library 
+      const _ = require("lodash");
+      // sap xep theo ten quoc gia o muc selected
+      const countries = _.sortBy(res.data, 'Country')
+      setCountries(countries)
+
+      // set mac dinh khi load len la data cua vn
       setSelectedCountryId('vn')
     })
 
@@ -41,12 +54,20 @@ function App() {
   }, [countries, selectedCountryId])
 
   return (
-    <>
-      <h3>This is my app covid flow</h3>
-      <CountrySelector countries={countries} handleOnChange={handleOnChange} value={selectedCountryId} />
+    <Container style={{ textAlign: 'center', padding: '0 30px' }}>
+      <Typography
+        style={{ fontSize: '25px', fontWeight: 'bold', textAlign: 'center' }} >
+        Theo dõi tình hình covid cả thế giới
+      </Typography>
+      <Typography style={{ fontWeight: 'bold', textAlign: 'center' }}>{moment().format('LLLL')}</Typography>
+      <CountrySelector
+
+        countries={countries}
+        handleOnChange={handleOnChange}
+        value={selectedCountryId} />
       <Highlight report={report} />
       <Summary report={report} />
-    </>
+    </Container>
   )
 }
 

@@ -1,13 +1,16 @@
 import React from 'react'
-import { FormControl, FormHelperText, InputLabel, NativeSelect } from '@material-ui/core'
+import { FormControl, FormHelperText, InputLabel, NativeSelect, MenuItem, Select } from '@material-ui/core'
 
 const CountrySelector = ({ value, handleOnChange, countries }) => {
     return (
-        <FormControl>
-            <InputLabel htmlFor="country-selector" shrink>
+        <FormControl fullWidth style={{ display: 'flex', flexDirection: 'center' }}>
+            <FormHelperText style={{ textAlign: 'center', width: '100%', fontSize: '20px', margin: '0 auto' }}
+                htmlFor="country-selector"
+                shrink="true" >
                 Danh sách quốc gia trên thế giới
-            </InputLabel>
-            <NativeSelect
+            </FormHelperText>
+            <Select
+                style={{ padding: '10px 20px 0 10px', width: '50%', margin: '0 auto 30px auto' }}
                 value={value}
                 onChange={handleOnChange}
                 inputProps={{
@@ -16,12 +19,13 @@ const CountrySelector = ({ value, handleOnChange, countries }) => {
                 }}
             >
                 {countries && countries.map((country, index) => (
-                    <option key={index} value={country.ISO2.toLowerCase()}>
+                    <MenuItem
+                        key={index}
+                        value={country.ISO2.toLowerCase()}>
                         {country.Country}
-                    </option>
+                    </MenuItem>
                 ))}
-            </NativeSelect>
-            <FormHelperText>Chọn quốc gia bạn muốn xem</FormHelperText>
+            </Select>
         </FormControl>
     )
 }
