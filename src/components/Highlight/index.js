@@ -11,11 +11,11 @@ const Highlight = ({ report }) => {
             count: data.Confirmed,
             type: 'confirmed'
         },
-        {
-            title: 'Số ca khỏi',
-            count: data.Recovered,
-            type: 'recovered'
-        },
+        // {
+        //     title: 'Số ca khỏi',
+        //     count: data.Recovered,
+        //     type: 'recovered'
+        // },
         {
             title: 'Số ca tử vong',
             count: data.Deaths,
@@ -29,7 +29,7 @@ const Highlight = ({ report }) => {
             {summary.map((item, index) => {
                 return <Grid
                     item
-                    sm={4}
+                    sm={6}
                     xs={12}
                     key={index}>
                     <HighlightCard

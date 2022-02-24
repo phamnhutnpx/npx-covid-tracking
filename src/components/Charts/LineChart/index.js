@@ -11,7 +11,8 @@ const generateOptions = (data) => {
         moment(item.Date).format('DD-MM-YYYY'))
     return {
         chart: {
-            height: 500
+            height: 500,
+            // width: 1240,
         },
         title: {
             text: 'Tổng ca nhiễm'
@@ -60,6 +61,9 @@ function LineChart({ data }) {
             case 'All':
                 customData = data
                 break
+            case '365':
+                customData = data.slice(data.length - 365)
+                break
             case '30':
                 customData = data.slice(data.length - 30)
                 break
@@ -69,15 +73,15 @@ function LineChart({ data }) {
             default: customData = data
         }
 
-
         setOptions(generateOptions(customData))
     }, [data, reportType])
 
     return (
-        <>
+        <div>
 
-            <ButtonGroup size="small" style={{ display: 'flex', justifyContent: 'center' }}>
+            <ButtonGroup size="medium" style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button color={reportType === 'All' ? 'secondary' : ''} onClick={() => setReportType('All')}>Tất cả</Button>
+                <Button color={reportType === '365' ? 'secondary' : ''} onClick={() => setReportType('365')}>1 năm</Button>
                 <Button color={reportType === '30' ? 'secondary' : ''} onClick={() => setReportType('30')}>30 ngày</Button>
                 <Button color={reportType === '7' ? 'secondary' : ''} onClick={() => setReportType('7')}>7 ngày</Button>
             </ButtonGroup>
@@ -85,7 +89,7 @@ function LineChart({ data }) {
                 highcharts={HighCharts}
                 options={options}
             />
-        </>
+        </div>
     )
 }
 
