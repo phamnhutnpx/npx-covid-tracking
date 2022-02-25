@@ -57,7 +57,7 @@ function App() {
     <Container style={{ textAlign: 'center', padding: '0 30px' }}>
       <Typography
         style={{ fontSize: '25px', fontWeight: 'bold', textAlign: 'center' }} >
-        Theo dõi tình hình covid cả thế giới
+        Theo dõi tình hình covid trên thế giới
       </Typography>
       <Typography style={{ fontWeight: 'bold', textAlign: 'center' }}>{moment().format('LLLL')}</Typography>
       <CountrySelector
